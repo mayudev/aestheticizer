@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strings"
@@ -51,10 +52,39 @@ func convertString(s string) string {
 func main() {
 	input := os.Args[1:]
 
-	// Parse the string to be converted from args
-	parsedInput := strings.Join(input, " ")
-	convertedString := convertString(parsedInput)
-	
-	// Print the result to console
-	fmt.Println(convertedString)
+	// Check if argument was provided
+	if len(input) > 0 {
+		// Parse the string to be converted from args
+		parsedInput := strings.Join(input, " ")
+		convertedString := convertString(parsedInput)
+
+		// Print the result to console
+		fmt.Println(convertedString)
+	} else {
+		// If not, the program might be running as a pipe
+		stat, err := os.Stdin.Stat()
+		if err != nil {
+			panic(err)
+		}
+		
+		if (stat.Mode() & os.ModeCharDevice) == 0 {
+			var stdin []string
+
+			// Scan each line
+			scanner := bufio.NewScanner(os.Stdin)
+			for scanner.Scan() {
+				stdin = append(stdin, scanner.Text())
+			}
+			if err := scanner.Err(); err != nil {
+				panic(err)
+			}
+			
+			// Convert and output each line
+			for _, line := range stdin {
+				convertedLine := convertString(line)
+				fmt.Println(convertedLine)
+			}
+		}
+	}
+
 }
