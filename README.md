@@ -18,3 +18,9 @@ You can also use it as a pipe (why would you?)
 ｍａｉｎ＿ｔｅｓｔ．ｇｏ
 ＲＥＡＤＭＥ．ｍｄ
 ```
+
+## Building
+
+```
+go build
+```
